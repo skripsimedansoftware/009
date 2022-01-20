@@ -7,7 +7,6 @@ class Admin extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->library('template', ['module' => strtolower($this->router->fetch_class())]);
-		$this->load->model('user');
 		if (empty($this->session->userdata($this->router->fetch_class())))
 		{
 			if (!in_array($this->router->fetch_method(), ['login', 'register', 'forgot_password', 'reset_password']))
@@ -149,6 +148,194 @@ class Admin extends CI_Controller {
 				$this->template->load('profile', $data);
 			break;
 		}
+	}
+
+	/**
+	 * Daftar produk
+	 */
+	public function product()
+	{
+		$data['products'] = $this->product->read();
+		$this->template->load('product/home', $data);
+	}
+
+	/**
+	 * Tambah produk
+	 */
+	public function product_add()
+	{
+		if ($this->input->method() == 'post')
+		{
+			$this->form_validation->set_rules('name', 'Nama Produk', 'trim|required');
+			$this->form_validation->set_rules('price', 'Harga Produk', 'trim|numeric|required');
+
+			if ($this->form_validation->run() == TRUE)
+			{
+				$image = NULL;
+
+				if (isset($_FILES['image']) && !empty($_FILES['image']['name']))
+				{
+					$config['upload_path'] = FCPATH.'uploads';
+					$config['allowed_types'] = 'gif|jpg|jpeg|png';
+					$this->load->library('upload', $config);
+					if ($this->upload->do_upload('image'))
+					{
+						$image = $this->upload->data();
+					}
+					else
+					{
+						$image = FALSE;
+						$data['upload_error'] = $this->upload->display_errors('<span class="help-block error">', '</span>');
+						$this->template->load('product/add', $data);
+					}
+				}
+
+				if ($image !== FALSE)
+				{
+					$this->product->create(array(
+						'name' => $this->input->post('name'),
+						'image' => $image,
+						'price' => $this->input->post('price')
+					));
+
+					$this->session->set_flashdata('message', 'Data produk telah ditambahkan');
+					redirect(base_url($this->router->fetch_class().'/product'), 'refresh');
+				}
+			}
+			else
+			{
+				$this->template->load('product/add');
+			}
+		}
+		else
+		{
+			$this->template->load('product/add');
+		}
+	}
+
+	/**
+	 * Edit produk
+	 *
+	 * @param      integer  $id     product.id
+	 */
+	public function product_edit($id)
+	{
+		$product = $this->product->read(array('id' => $id));
+		if ($product->num_rows() >= 1)
+		{
+			if ($this->input->method() == 'post')
+			{
+				$this->form_validation->set_rules('name', 'Nama Produk', 'trim|required');
+				$this->form_validation->set_rules('price', 'Harga Produk', 'trim|numeric|required');
+
+				if ($this->form_validation->run() == TRUE)
+				{
+					$image = NULL;
+
+					if (isset($_FILES['image']) && !empty($_FILES['image']['name']))
+					{
+						$config['upload_path'] = FCPATH.'uploads';
+						$config['allowed_types'] = 'gif|jpg|jpeg|png';
+						$this->load->library('upload', $config);
+						if ($this->upload->do_upload('image'))
+						{
+							$image = $this->upload->data();
+						}
+						else
+						{
+							$image = FALSE;
+							$data['upload_error'] = $this->upload->display_errors('<span class="help-block error">', '</span>');
+							$this->template->load('product/add', $data);
+						}
+					}
+
+					if ($image !== FALSE)
+					{
+						$this->product->update(array(
+							'name' => $this->input->post('name'),
+							'image' => $image,
+							'price' => $this->input->post('price')
+						), array('id' => $id));
+
+						$this->session->set_flashdata('message', 'Data produk telah diperbaharui');
+						redirect(base_url($this->router->fetch_class().'/product'), 'refresh');
+					}
+				}
+				else
+				{
+					$this->template->load('product/add');
+				}
+			}
+			else
+			{
+				$data['product'] = $product->row_array();
+				$this->template->load('product/edit', $data);
+			}
+		}
+		else
+		{
+			show_404();
+		}
+	}
+
+	/**
+	 * Hapus produk
+	 *
+	 * @param      integer  $id     product.id
+	 */
+	public function product_delete($id)
+	{
+		$this->product->delete(array('id' => $id));
+		$this->session->set_flashdata('message', 'Data produk telah dihapus');
+		redirect(base_url($this->router->fetch_class().'/product'), 'refresh');
+	}
+
+	/**
+	 * Daftar Pesanan
+	 */
+	public function order()
+	{
+		$data['orders'] = $this->order->read();
+		$this->template->load('order/home', $data);
+	}
+
+	/**
+	 * Halaman tambah pesanan
+	 */
+	public function order_add()
+	{
+		$this->template->load('order/add');
+	}
+
+	/**
+	 * Edit pesanan
+	 *
+	 * @param      integer  $id     order.id
+	 */
+	public function order_edit($id)
+	{
+		$order = $this->order->read(array('id' => $id));
+		if ($order->num_rows() >= 1)
+		{
+			$data['order'] = $order->row_array();
+			$this->template->load('order/edit', $data);
+		}
+		else
+		{
+			show_404();
+		}
+	}
+
+	/**
+	 * Hapus pesanan
+	 *
+	 * @param      integer  $id     order.id
+	 */
+	public function order_delete($id)
+	{
+		$this->order->delete(array('id' => $id));
+		$this->session->set_flashdata('message', 'Data pesanan telah dihapus');
+		redirect(base_url($this->router->fetch_class().'/order'), 'refresh');
 	}
 
 	public function is_owned_data($val, $str)

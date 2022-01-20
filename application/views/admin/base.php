@@ -12,6 +12,42 @@
 	<link rel="stylesheet" href="<?= base_url('assets/adminlte/') ?>dist/css/skins/_all-skins.min.css">
 	<link rel="stylesheet" href="<?= base_url('assets/plugins/') ?>SweetAlert2/dist/sweetalert2.min.css">
 	<link rel="stylesheet" href="<?= base_url('assets/plugins/') ?>DataTables/datatables.min.css">
+
+
+	<!-- REQUIRED JS SCRIPTS -->
+	<!-- jQuery 3 -->
+	<script src="<?= base_url('assets/adminlte/') ?>bower_components/jquery/dist/jquery.min.js"></script>
+
+	<!-- Bootstrap 3.3.7 -->
+	<script src="<?= base_url('assets/adminlte/') ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+	<!-- JQuery InputMask -->
+	<script src="<?= base_url('assets/adminlte/') ?>plugins/input-mask/jquery.inputmask.js"></script>
+	<script src="<?= base_url('assets/adminlte/') ?>plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+	<script src="<?= base_url('assets/adminlte/') ?>plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+	<!-- SweetAlert2 -->
+	<script src="<?= base_url('assets/plugins/') ?>SweetAlert2/dist/sweetalert2.all.min.js"></script>
+
+	<!-- DataTables -->
+	<script src="<?= base_url('assets/plugins/') ?>DataTables/datatables.min.js"></script>
+
+	<!-- AdminLTE App -->
+	<script src="<?= base_url('assets/adminlte/') ?>dist/js/adminlte.min.js"></script>
+
+	<script type="text/javascript">
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				$('#profile-upload-preview').attr('src', e.target.result);
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
+	$('.datatable').DataTable();
+	</script>
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -19,7 +55,7 @@
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 	<!-- Google Font -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+	<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"> -->
 	<style type="text/css">
 	.help-block.error {
 		color: red;
@@ -54,7 +90,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="sidebar-mini hold-transition skin-blue fixed">
+<body class="sidebar-mini hold-transition skin-red fixed">
 <div class="wrapper">
 
 	<!-- Main Header -->
@@ -144,13 +180,13 @@ desired effect
 				<li class="header">MENU</li>
 				<!-- Optionally, you can add icons to the links -->
 				<li class="<?= $this->router->fetch_method() == 'index'?'active':'' ?>"><a href="<?= base_url($this->router->fetch_class()) ?>"><i class="fa fa-home"></i> <span>Beranda</span></a></li>
-				<li class="treeview">
+				<li class="treeview <?= (in_array($this->router->fetch_method(), ['product', 'product_add', 'product_edit', 'order', 'order_add', 'order_edit']))?'active':'' ?>">
 					<a href="#"><i class="fa fa-cubes"></i> <span>Data</span>
 						<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
 					</a>
 					<ul class="treeview-menu">
-						<li><a href="#">Produk</a></li>
-						<li><a href="#">Pembelian</a></li>
+						<li class="<?= (in_array($this->router->fetch_method(), ['product', 'product_add', 'product_edit']))?'active':'' ?>"><a href="<?= base_url($this->router->fetch_class().'/product') ?>">Produk</a></li>
+						<li class="<?= (in_array($this->router->fetch_method(), ['order', 'order_add', 'order_edit']))?'active':'' ?>"><a href="<?= base_url($this->router->fetch_class().'/order') ?>">Pembelian</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -245,41 +281,5 @@ desired effect
 	<div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-
-<!-- REQUIRED JS SCRIPTS -->
-
-<!-- jQuery 3 -->
-<script src="<?= base_url('assets/adminlte/') ?>bower_components/jquery/dist/jquery.min.js"></script>
-
-<!-- Bootstrap 3.3.7 -->
-<script src="<?= base_url('assets/adminlte/') ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-<!-- JQuery InputMask -->
-<script src="<?= base_url('assets/adminlte/') ?>plugins/input-mask/jquery.inputmask.js"></script>
-<script src="<?= base_url('assets/adminlte/') ?>plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
-<script src="<?= base_url('assets/adminlte/') ?>plugins/input-mask/jquery.inputmask.extensions.js"></script>
-
-<!-- SweetAlert2 -->
-<script src="<?= base_url('assets/plugins/') ?>SweetAlert2/dist/sweetalert2.all.min.js"></script>
-
-<!-- DataTables -->
-<script src="<?= base_url('assets/plugins/') ?>DataTables/datatables.min.js"></script>
-
-<!-- AdminLTE App -->
-<script src="<?= base_url('assets/adminlte/') ?>dist/js/adminlte.min.js"></script>
-
-<script type="text/javascript">
-function readURL(input) {
-	if (input.files && input.files[0]) {
-		var reader = new FileReader();
-		reader.onload = function (e) {
-			$('#profile-upload-preview').attr('src', e.target.result);
-		}
-		reader.readAsDataURL(input.files[0]);
-	}
-}
-
-$('.datatable').DataTable();
-</script>
 </body>
 </html>
