@@ -158,6 +158,23 @@ class MY_Model extends \CI_Model
 
 		return $this->db->delete($this->table);
 	}
+
+	/**
+	 * Count table data
+	 *
+	 * @param      array   $where  Where query
+	 *
+	 * @return     int
+	 */
+	public function count($where = array())
+	{
+		if (!empty($where))
+		{
+			$this->db->where($where);
+		}
+
+		return $this->db->count_all_results($this->table);
+	}
 }
 
 /* End of file MY_Model.php */
