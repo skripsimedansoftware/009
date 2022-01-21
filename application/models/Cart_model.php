@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 namespace Angeli;
 
-class Cart extends MY_Model
+class Cart_model extends MY_Model
 {
 	public function __construct()
 	{
@@ -12,5 +12,5 @@ class Cart extends MY_Model
 	}
 }
 
-/* End of file Cart.php */
-/* Location: ./application/models/Cart.php */
+/* End of file Cart_model.php */
+/* Location: ./application/models/Cart_model.php */
