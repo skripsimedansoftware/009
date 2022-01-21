@@ -2,10 +2,10 @@
 -- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Jan 19, 2022 at 09:15 PM
--- Server version: 10.4.21-MariaDB
--- PHP Version: 7.3.31
+-- Host: 127.0.0.1
+-- Generation Time: Jan 22, 2022 at 12:37 AM
+-- Server version: 10.4.20-MariaDB
+-- PHP Version: 7.3.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `codeigniter-skripsi`
+-- Database: `skripsi-max-miner`
 --
 
 -- --------------------------------------------------------
@@ -29,9 +29,33 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `cart` (
   `id` int(8) NOT NULL,
+  `order_id` int(6) NOT NULL,
   `product_id` int(4) NOT NULL,
-  `price` double NOT NULL
+  `name` varchar(80) NOT NULL,
+  `quantity` int(4) NOT NULL,
+  `price` double NOT NULL,
+  `subtotal` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`id`, `order_id`, `product_id`, `name`, `quantity`, `price`, `subtotal`) VALUES
+(1, 2, 1, 'roti', 1, 2000, 2000),
+(2, 2, 2, 'selai', 1, 2000, 2000),
+(3, 2, 3, 'mentega', 1, 2000, 2000),
+(4, 3, 1, 'roti', 1, 2000, 2000),
+(5, 3, 3, 'mentega', 1, 2000, 2000),
+(6, 4, 1, 'roti', 1, 2000, 2000),
+(7, 4, 3, 'mentega', 1, 2000, 2000),
+(8, 4, 4, 'susu', 1, 2000, 2000),
+(9, 5, 1, 'roti', 1, 2000, 2000),
+(10, 5, 3, 'mentega', 1, 2000, 2000),
+(11, 5, 4, 'susu', 1, 2000, 2000),
+(12, 5, 5, 'coklat', 1, 2000, 2000),
+(13, 6, 4, 'susu', 1, 2000, 2000),
+(14, 6, 5, 'coklat', 1, 2000, 2000);
 
 -- --------------------------------------------------------
 
@@ -57,32 +81,22 @@ CREATE TABLE `email_confirm` (
 CREATE TABLE `order` (
   `id` int(6) NOT NULL,
   `uid` varchar(10) NOT NULL,
+  `item` int(2) NOT NULL,
   `total` double NOT NULL,
   `date` date NOT NULL,
   `time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `post`
+-- Dumping data for table `order`
 --
 
-CREATE TABLE `post` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `parent` bigint(20) UNSIGNED NOT NULL,
-  `language` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `author` bigint(20) UNSIGNED NOT NULL,
-  `slug` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `headline` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `keywords` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `published_date` datetime DEFAULT NULL,
-  `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL,
-  `status` enum('draft','publish','revision') COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+INSERT INTO `order` (`id`, `uid`, `item`, `total`, `date`, `time`) VALUES
+(2, 'v7KB0lqE6R', 3, 6000, '2022-01-22', '06:15:00'),
+(3, 'EoeXZqtORV', 2, 4000, '2022-01-22', '06:16:00'),
+(4, '35eXZEwHyQ', 3, 6000, '2022-01-22', '06:17:00'),
+(5, 'Eji4d8gBq1', 4, 8000, '2022-01-22', '06:18:00'),
+(6, 'kDIn738auS', 2, 4000, '2022-01-22', '06:18:00');
 
 -- --------------------------------------------------------
 
@@ -93,9 +107,20 @@ CREATE TABLE `post` (
 CREATE TABLE `product` (
   `id` int(4) NOT NULL,
   `name` varchar(80) NOT NULL,
-  `image` varchar(100) NOT NULL,
+  `image` varchar(100) DEFAULT NULL,
   `price` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`id`, `name`, `image`, `price`) VALUES
+(1, 'roti', NULL, 2000),
+(2, 'selai', NULL, 2000),
+(3, 'mentega', NULL, 2000),
+(4, 'susu', NULL, 2000),
+(5, 'coklat', NULL, 2000);
 
 -- --------------------------------------------------------
 
@@ -143,12 +168,6 @@ ALTER TABLE `order`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `post`
---
-ALTER TABLE `post`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `product`
 --
 ALTER TABLE `product`
@@ -168,7 +187,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `email_confirm`
@@ -180,19 +199,13 @@ ALTER TABLE `email_confirm`
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `post`
---
-ALTER TABLE `post`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user`
