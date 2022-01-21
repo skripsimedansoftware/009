@@ -1,6 +1,4 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
 namespace Angeli;
 
 class Cart_model extends MY_Model

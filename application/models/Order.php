@@ -1,6 +1,4 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
 namespace Angeli;
 
 class Order extends MY_Model
