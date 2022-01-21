@@ -1,12 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use Phpml\Association\Apriori;
+
 class Admin extends CI_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->library('template', ['module' => strtolower($this->router->fetch_class())]);
+		$this->load->library('cart');
 		if (empty($this->session->userdata($this->router->fetch_class())))
 		{
 			if (!in_array($this->router->fetch_method(), ['login', 'register', 'forgot_password', 'reset_password']))
@@ -16,11 +19,17 @@ class Admin extends CI_Controller {
 		}
 	}
 
+	/**
+	 * User dashboard
+	 */
 	public function index()
 	{
 		$this->template->load('home');
 	}
 
+	/**
+	 * User login
+	 */
 	public function login()
 	{
 		if ($this->input->method() == 'post')
@@ -60,6 +69,12 @@ class Admin extends CI_Controller {
 		}
 	}
 
+	/**
+	 * User profile
+	 *
+	 * @param      int     $id      user.id
+	 * @param      string  $option  edit or view
+	 */
 	public function profile($id = NULL, $option = NULL)
 	{
 		$data['profile'] = $this->user->read(array('id' => (!empty($id))?$id:$this->session->userdata(strtolower($this->router->fetch_class()))))->row();
@@ -177,10 +192,11 @@ class Admin extends CI_Controller {
 				{
 					$config['upload_path'] = FCPATH.'uploads';
 					$config['allowed_types'] = 'gif|jpg|jpeg|png';
+					$config['encrypt_name'] = TRUE;
 					$this->load->library('upload', $config);
 					if ($this->upload->do_upload('image'))
 					{
-						$image = $this->upload->data();
+						$image = $this->upload->data('file_name');
 					}
 					else
 					{
@@ -230,7 +246,7 @@ class Admin extends CI_Controller {
 
 				if ($this->form_validation->run() == TRUE)
 				{
-					$image = NULL;
+					$image = $product->row()->image;
 
 					if (isset($_FILES['image']) && !empty($_FILES['image']['name']))
 					{
@@ -239,7 +255,7 @@ class Admin extends CI_Controller {
 						$this->load->library('upload', $config);
 						if ($this->upload->do_upload('image'))
 						{
-							$image = $this->upload->data();
+							$image = $this->upload->data('file_name');
 						}
 						else
 						{
@@ -304,21 +320,109 @@ class Admin extends CI_Controller {
 	 */
 	public function order_add()
 	{
-		$this->template->load('order/add');
+		$data['products'] = $this->product->read();
+		$this->template->load('order/add', $data);
 	}
 
 	/**
-	 * Edit pesanan
+	 * Tambah produk ke keranjang
+	 */
+	public function cart_add()
+	{
+		if (!empty($this->input->post('update')))
+		{
+			$data = array(
+				'rowid'	=> $this->input->post('update'),
+				'qty'	=> $this->input->post('quantity')
+			);
+
+			$this->session->set_flashdata('message', 'Produk dalam keranjang pesanan telah diperbaharui');
+			$this->cart->update($data);
+		}
+		elseif (!empty($this->input->post('remove')))
+		{
+			$this->session->set_flashdata('message', 'Produk pesanan telah dihapus dari keranjang');
+			$this->cart->remove($this->input->post('remove'));
+		}
+		else
+		{
+			$data = array(
+				'id'		=> $this->input->post('id'),
+				'qty'		=> $this->input->post('quantity'),
+				'price'		=> $this->input->post('price'),
+				'name'		=> $this->input->post('name')
+			);
+
+			$this->session->set_flashdata('message', 'Produk telah ditambahkan ke keranjang');
+			$this->cart->insert($data);
+		}
+
+		redirect(base_url($this->router->fetch_class().'/order_add'), 'refresh');
+	}
+
+	/**
+	 * Batalkan pesanan produk
+	 */
+	public function order_cancel()
+	{
+		$this->cart->destroy();
+		$this->session->set_flashdata('message', 'Pesanan telah dibatalkan');
+		redirect(base_url($this->router->fetch_class().'/order'), 'refresh');
+	}
+
+	/**
+	 * Proses pesanan dalam keranjang
+	 */
+	public function order_next()
+	{
+		if ($this->input->method() == 'post')
+		{
+			$order = $this->order->create(array(
+				'uid' => $this->input->post('order_uid'),
+				'item' => $this->cart->total_items(),
+				'total' => $this->cart->total(),
+				'date' => nice_date(unix_to_human(now()), 'Y-m-d'),
+				'time' => nice_date(unix_to_human(now()), 'H:i:s')
+			), TRUE);
+
+			foreach ($this->cart->contents() as $cart)
+			{
+				$this->cart_model->create(array(
+					'order_id' => $order,
+					'product_id' => $cart['id'],
+					'name' => $cart['name'],
+					'quantity' => $cart['qty'],
+					'price' => $cart['price'],
+					'subtotal' => $cart['subtotal']
+				));
+			}
+
+			$this->cart->destroy();
+			$this->session->set_flashdata('message', 'Pesanan telah dibuat <b>#'.$this->input->post('order_uid').'</b>');
+			redirect(base_url($this->router->fetch_class().'/order'), 'refresh');
+		}
+		else
+		{
+			$data['code'] = random_string('alnum', 10);
+			$data['order'] = $this->cart->contents();
+			$this->template->load('order/next', $data);
+		}
+	}
+
+	/**
+	 * Detail pesanan
 	 *
 	 * @param      integer  $id     order.id
 	 */
-	public function order_edit($id)
+	public function order_detail($id)
 	{
 		$order = $this->order->read(array('id' => $id));
 		if ($order->num_rows() >= 1)
 		{
-			$data['order'] = $order->row_array();
-			$this->template->load('order/edit', $data);
+			$order = $order->row_array();
+			$data['order'] = $order;
+			$data['detail'] = $this->cart_model->read(array('order_id' => $order['id']))->result_array();
+			$this->template->load('order/detail', $data);
 		}
 		else
 		{
@@ -333,9 +437,30 @@ class Admin extends CI_Controller {
 	 */
 	public function order_delete($id)
 	{
+		$this->cart_model->delete(array('order_id' => $id));
 		$this->order->delete(array('id' => $id));
 		$this->session->set_flashdata('message', 'Data pesanan telah dihapus');
 		redirect(base_url($this->router->fetch_class().'/order'), 'refresh');
+	}
+
+	/**
+	 * Max Miner
+	 */
+	public function max_miner()
+	{
+		$orders = $this->order->read()->result_array();
+		$cart = array();
+		foreach ($orders as $key => $order)
+		{
+			$cart[$key] = array_map(function($cart) {
+				return $cart['name'];
+			}, $this->cart_model->read(array('order_id' => $order['id']))->result_array());
+		}
+
+		$associator = new Apriori($support = 0.3);
+		$associator->train($cart, array());
+		$data['associator'] = $associator;
+		$this->template->load('max_miner/home', $data);
 	}
 
 	public function is_owned_data($val, $str)

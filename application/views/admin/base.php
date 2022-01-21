@@ -180,15 +180,16 @@ desired effect
 				<li class="header">MENU</li>
 				<!-- Optionally, you can add icons to the links -->
 				<li class="<?= $this->router->fetch_method() == 'index'?'active':'' ?>"><a href="<?= base_url($this->router->fetch_class()) ?>"><i class="fa fa-home"></i> <span>Beranda</span></a></li>
-				<li class="treeview <?= (in_array($this->router->fetch_method(), ['product', 'product_add', 'product_edit', 'order', 'order_add', 'order_edit']))?'active':'' ?>">
+				<li class="treeview <?= (in_array($this->router->fetch_method(), ['product', 'product_add', 'product_edit', 'order', 'order_add', 'order_next', 'order_detail']))?'active':'' ?>">
 					<a href="#"><i class="fa fa-cubes"></i> <span>Data</span>
 						<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
 					</a>
 					<ul class="treeview-menu">
 						<li class="<?= (in_array($this->router->fetch_method(), ['product', 'product_add', 'product_edit']))?'active':'' ?>"><a href="<?= base_url($this->router->fetch_class().'/product') ?>">Produk</a></li>
-						<li class="<?= (in_array($this->router->fetch_method(), ['order', 'order_add', 'order_edit']))?'active':'' ?>"><a href="<?= base_url($this->router->fetch_class().'/order') ?>">Pembelian</a></li>
+						<li class="<?= (in_array($this->router->fetch_method(), ['order', 'order_add', 'order_next', 'order_detail']))?'active':'' ?>"><a href="<?= base_url($this->router->fetch_class().'/order') ?>">Pembelian</a></li>
 					</ul>
 				</li>
+				<li class="<?= $this->router->fetch_method() == 'max_miner'?'active':'' ?>"><a href="<?= base_url($this->router->fetch_class().'/max_miner') ?>"><i class="fa fa-cogs"></i> <span>Max Miner</span></a></li>
 			</ul>
 			<!-- /.sidebar-menu -->
 		</section>

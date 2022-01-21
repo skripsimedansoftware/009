@@ -32,9 +32,9 @@
 						<td>#<?= $order['uid'] ?></td>
 						<td>Rp.<?= number_format($order['total'], 0, ',', '.') ?></td>
 						<td><?= nice_date($order['date'], 'd-m-Y') ?></td>
-						<td><?= nice_date($order['date'], 'H:i') ?></td>
+						<td><?= nice_date($order['time'], 'H:i A') ?></td>
 						<td>
-							<a href="<?= base_url($this->router->fetch_class().'/order_edit/'.$order['id']) ?>" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></a>
+							<a href="<?= base_url($this->router->fetch_class().'/order_detail/'.$order['id']) ?>" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>
 							<a onclick="confirm('Press a button!');" href="<?= base_url($this->router->fetch_class().'/order_delete/'.$order['id']) ?>" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
 						</td>
 					</tr>

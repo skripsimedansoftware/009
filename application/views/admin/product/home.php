@@ -3,6 +3,12 @@
 	<h1>Administrator<small>Produk</small></h1>
 </section>
 
+<style type="text/css">
+img.product-image {
+	height: 120px;
+}
+</style>
+
 <!-- Main content -->
 <section class="content container-fluid">
 	<?php if ($this->session->has_userdata('message')): ?>
@@ -21,6 +27,7 @@
 					<th>No</th>
 					<th>Nama Produk</th>
 					<th>Harga Produk</th>
+					<th>Gambar</th>
 					<th>Opsi</th>
 				</thead>
 				<tbody>
@@ -28,6 +35,7 @@
 					<tr>
 						<td><?= $key+1 ?></td>
 						<td><?= $product['name'] ?></td>
+						<td><img src="<?= (!empty($product['image']))?base_url('uploads/'.$product['image']):base_url('assets/image/no-image.png') ?>" class="img-responsive product-image"></td>
 						<td>Rp.<?= number_format($product['price'], 0, ',', '.') ?></td>
 						<td>
 							<a href="<?= base_url($this->router->fetch_class().'/product_edit/'.$product['id']) ?>" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></a>
@@ -48,5 +56,11 @@
 $(document).on('click', '.btn-delete-product', function(e) {
 	e.preventDefault();
 	var data_id = $(this).attr('data_id');
+	$.ajax({
+		url: '<?php base_url($this->router->fetch_class().'/product_delete/') ?>'+data_id,
+		type: 'GET',
+		dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
+		data: {param1: 'value1'},
+	});
 })
 </script>
