@@ -16,11 +16,12 @@
 			<h3 class="box-title">Daftar Pesanan</h3>
 		</div>
 		<div class="box-body">
-			<table class="table table-hover table-striped">
+			<table class="table table-hover table-striped datatable">
 				<thead>
 					<th>No</th>
 					<th>Invoice</th>
-					<th>Total</th>
+					<th>Total Item</th>
+					<th>Total Harga</th>
 					<th>Tanggal</th>
 					<th>Jam</th>
 					<th>Opsi</th>
@@ -29,7 +30,8 @@
 					<?php foreach ($orders->result_array() as $key => $order): ?>
 					<tr>
 						<td><?= $key+1 ?></td>
-						<td>#<?= $order['uid'] ?></td>
+						<td><b>#<?= $order['uid'] ?></b></td>
+						<td><?= $order['item'] ?></td>
 						<td>Rp.<?= number_format($order['total'], 0, ',', '.') ?></td>
 						<td><?= nice_date($order['date'], 'd-m-Y') ?></td>
 						<td><?= nice_date($order['time'], 'H:i A') ?></td>
@@ -47,3 +49,7 @@
 		</div>
 	</div>
 </section>
+
+<script type="text/javascript">
+$('.datatable').DataTable();
+</script>

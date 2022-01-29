@@ -37,7 +37,7 @@ img.product-image {
 					<?php endforeach; ?>
 					<tr>
 						<td colspan="3"></td>
-						<td><?= $order['item'] ?></td>
+						<td><?= array_sum(array_column($detail, 'quantity')) ?></td>
 						<td>Rp.<?= number_format($order['total'], 0, ',', '.') ?></td>
 					</tr>
 				</tbody>
