@@ -85,8 +85,161 @@ const Initialize_Database = () => {
 	});
 }
 
+
+
 Initialize_Database().then(async init => {
 	DB = init;
+
+	var random_array = function(array) {
+		var random = Math.floor(Math.random() * array.length);
+		return array[random];
+	}
+
+	var random_integer = function(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	var random_string = (length) => {
+		var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split('');
+		if (!length) {
+			length = Math.floor(Math.random() * chars.length);
+		}
+
+		var str = '';
+			for (var i = 0; i < length; i++) {
+			str += chars[Math.floor(Math.random() * chars.length)];
+		}
+
+		return str;
+	}
+
+	var array_object_find_value = (arrayName, searchKey, searchValue) => {
+		let find = arrayName.findIndex(i => i[searchKey] == searchValue);
+		return (find !== -1)?find:false;
+	}
+
+	// await Models.product.bulkCreate([
+	// 	{
+	// 		name: 'Chitato',
+	// 		type: 'food',
+	// 		image: null,
+	// 		price: 18700
+	// 	},
+	// 	{
+	// 		name: 'Qtela',
+	// 		type: 'food',
+	// 		image: null,
+	// 		price: 14150
+	// 	},
+	// 	{
+	// 		name: 'Jetz',
+	// 		type: 'food',
+	// 		image: null,
+	// 		price: 21145
+	// 	},
+	// 	{
+	// 		name: 'Chiki',
+	// 		type: 'food',
+	// 		image: null,
+	// 		price: 18700
+	// 	},
+	// 	{
+	// 		name: 'Maxicorn',
+	// 		type: 'food',
+	// 		image: null,
+	// 		price: 18700
+	// 	},
+	// 	{
+	// 		name: 'Indomilk',
+	// 		type: 'drink',
+	// 		image: null,
+	// 		price: 18700
+	// 	},
+	// 	{
+	// 		name: 'Ichi Ocha',
+	// 		type: 'drink',
+	// 		image: null,
+	// 		price: 18700
+	// 	},
+	// 	{
+	// 		name: 'Club',
+	// 		type: 'drink',
+	// 		image: null,
+	// 		price: 18700
+	// 	},
+	// 	{
+	// 		name: 'Fruitamin',
+	// 		type: 'drink',
+	// 		image: null,
+	// 		price: 18700
+	// 	}
+	// ]);
+
+	var food = await Models.product.findAll({ where: { type: 'food' } });
+	var drink = await Models.product.findAll({ where: { type: 'drink' } });
+	var date = moment().year(2021).month(0).date(0).hours(0).minutes(0).seconds(0).milliseconds(0);
+	for (i = 0; i < 1000; i++) {
+		date.add(random_array([random_integer(2, 4), random_integer(4, 6), random_integer(2, 8)]), 'hour');
+		var food_total = random_array([random_integer(1, 4), random_integer(0, 2), random_integer(1, 3)]);
+		var drink_total = random_array([random_integer(1, 4), random_integer(0, 2), random_integer(1, 3)]);
+
+		var total_price 	= [];
+		var total_items 	= [];
+			total_price[i] 	= 0;
+			total_items[i] 	= random_integer(2, 6);
+
+		var foods = new Array();
+		var drinks = new Array();
+
+		var order = new Array();
+		var product = new Array();
+
+		order[i] = await Models.order.create({
+			uid: random_string(10),
+			item: total_items[i],
+			total: null,
+			date: date.format('YYYY-MM-DD'),
+			time: date.format('HH:mm:ss')
+		});
+
+		product[i] = new Array();
+
+		var mix_product = (i) => {
+			var products = new Array();
+			for (mixer = 0; mixer+=1;) {
+				if (product[i].length == total_items[i]) {
+					return products;
+				} else {
+					var item = random_array(['drink', 'food']);
+					var random_product = random_array(eval(item));
+					if (product[i].indexOf(random_product.get('id')) == -1) {
+						product[i].push(random_product.get('id'));
+						products.push(random_product);
+					}
+				}
+			}
+		}
+
+		var mixed_product = mix_product(i);
+
+		for (var cart = 0; cart < mixed_product.length; cart++) {
+			var qty = random_integer(1, 4);
+			await Models.cart.create({
+				order_id: order[i].get('id'),
+				product_id: mixed_product[cart].get('id'),
+				name: mixed_product[cart].get('name'),
+				quantity: qty,
+				price: mixed_product[cart].get('price'),
+				subtotal: (mixed_product[cart].get('price')*qty)
+			});
+
+			total_price[i] += (mixed_product[cart].get('price')*qty);
+		}
+
+		order[i].update({ total: total_price[i] });
+	}
 });
 
 app.use(
