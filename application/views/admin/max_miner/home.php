@@ -5,6 +5,20 @@
 
 <!-- Main content -->
 <section class="content container-fluid">
+	<div class="row">
+		<div class="col-lg-3 col-sm-12">
+			<form action="">
+				<div class="form-group">
+					<label>Nilai Support</label>
+					<?php $min_support = (!empty($this->input->get('min-support')))?$this->input->get('min-support'):0.3 ?>
+					<input type="text" class="form-control" name="min-support" value="<?= $min_support ?>" placeholder="Nilai Support">
+				</div>
+				<div class="form-group">
+					<button class="btn btn-block btn-flat btn-primary">Perbaharui nilai support</button>
+				</div>
+			</form>
+		</div>
+	</div>
 	<?php
 	$iteration = 1;
 	for (;;)
