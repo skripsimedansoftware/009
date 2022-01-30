@@ -35,8 +35,8 @@ img.product-image {
 					<tr>
 						<td><?= $key+1 ?></td>
 						<td><?= $product['name'] ?></td>
-						<td><img src="<?= (!empty($product['image']))?base_url('uploads/'.$product['image']):base_url('assets/image/no-image.png') ?>" class="img-responsive product-image"></td>
 						<td>Rp.<?= number_format($product['price'], 0, ',', '.') ?></td>
+						<td><img src="<?= (!empty($product['image']))?base_url('uploads/'.$product['image']):base_url('assets/image/no-image.png') ?>" class="img-responsive product-image"></td>
 						<td>
 							<a href="<?= base_url($this->router->fetch_class().'/product_edit/'.$product['id']) ?>" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></a>
 							<a data_id="<?= $product['id'] ?>" class="btn btn-xs btn-danger btn-delete-product"><i class="fa fa-trash"></i></a>

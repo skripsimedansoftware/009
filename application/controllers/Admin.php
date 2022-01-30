@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use Phpml\Association\Apriori;
-
 class Admin extends CI_Controller {
 
 	public function __construct()
@@ -449,17 +447,19 @@ class Admin extends CI_Controller {
 	public function max_miner()
 	{
 		$orders = $this->order->read()->result_array();
-		$cart = array();
+		$transactions = array();
+
 		foreach ($orders as $key => $order)
 		{
-			$cart[$key] = array_map(function($cart) {
+			$transactions[$key] = array_map(function($cart) {
 				return $cart['name'];
 			}, $this->cart_model->read(array('order_id' => $order['id']))->result_array());
 		}
 
-		$associator = new Apriori($support = 0.3);
-		$associator->train($cart, array());
-		$data['associator'] = $associator;
+		$this->load->library('max_miner');
+		$this->max_miner->set_min_support((!empty($this->input->get('min-support')))?$this->input->get('min-support'):0.3);
+		$this->max_miner->set_transactions($transactions);
+		$data['max_miner'] = $this->max_miner;
 		$this->template->load('max_miner/home', $data);
 	}
 
