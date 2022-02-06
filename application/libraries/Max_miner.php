@@ -7,6 +7,8 @@ class Max_miner
 
 	public $min_support;
 
+	public $min_support_type;
+
 	public $transactions = array();
 
 	public function __construct($transactions = array(), $min_support = 0) {
@@ -36,15 +38,23 @@ class Max_miner
 	}
 
 	public function set_min_support($min_support) {
+		if ((int) $min_support > 0) {
+			$min_support = (int) $min_support;
+			$min_support_type = 'int';
+		} else {
+			$min_support = (float) $min_support;
+			$min_support_type = 'float';
+		}
+
 		$this->min_support = $min_support;
+		$this->min_support_type = $min_support_type;
 		return $this;
 	}
 
-	public function count_support(array $items, $min_support = NULL) {
+	public function count_support(array $items) {
 
 		$data = array();
 
-		$min_support = (empty($min_support))?$this->min_support:$min_support;
 		$count_transactions = count($this->transactions);
 
 		foreach ($items as $name => $count)
@@ -88,10 +98,15 @@ class Max_miner
 
 		$data = array();
 
-		$min_support = (empty($min_support))?$this->min_support:$min_support;
+		$min_support = (empty($min_support))?$this->min_support:$this->set_min_support($min_support)->min_support;
 
 		foreach ($items as $key => $value)
 		{
+			if ($this->min_support_type == 'int')
+			{
+				$value = ($value*100);
+			}
+
 			if ($value >= $min_support)
 			{
 				$data[$key] = $value;
