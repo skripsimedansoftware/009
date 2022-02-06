@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 29, 2022 at 03:48 AM
+-- Generation Time: Feb 06, 2022 at 01:32 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 7.3.29
 
@@ -4058,11 +4058,11 @@ CREATE TABLE `order` (
 --
 
 INSERT INTO `order` (`id`, `uid`, `item`, `total`, `date`, `time`) VALUES
-(1, 'oyqpLAOtUq', 4, 252880, '2020-12-31', '04:00:00'),
-(2, 'NG80okHWpy', 3, 130900, '2020-12-31', '06:00:00'),
-(3, '0FTtL9DHtM', 6, 182450, '2020-12-31', '10:00:00'),
-(4, '4H8MPXxlXE', 4, 154490, '2020-12-31', '17:00:00'),
-(5, 'L9OwQ00l3D', 3, 131400, '2020-12-31', '22:00:00'),
+(1, 'oyqpLAOtUq', 4, 252880, '2021-01-01', '04:00:00'),
+(2, 'NG80okHWpy', 3, 130900, '2021-01-01', '06:00:00'),
+(3, '0FTtL9DHtM', 6, 182450, '2021-01-01', '10:00:00'),
+(4, '4H8MPXxlXE', 4, 154490, '2021-01-01', '17:00:00'),
+(5, 'L9OwQ00l3D', 3, 131400, '2021-01-01', '22:00:00'),
 (6, 'u89vxFXxA4', 4, 182450, '2021-01-01', '05:00:00'),
 (7, '2vPcKGLQAa', 3, 224400, '2021-01-01', '08:00:00'),
 (8, 'TD91IaeXif', 4, 187000, '2021-01-01', '11:00:00'),
@@ -5092,6 +5092,18 @@ INSERT INTO `product` (`id`, `type`, `name`, `image`, `price`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `recomendation`
+--
+
+CREATE TABLE `recomendation` (
+  `id` int(2) NOT NULL,
+  `product` int(2) NOT NULL,
+  `product_recomendation` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
@@ -5135,6 +5147,12 @@ ALTER TABLE `product`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `recomendation`
+--
+ALTER TABLE `recomendation`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -5161,6 +5179,12 @@ ALTER TABLE `order`
 --
 ALTER TABLE `product`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `recomendation`
+--
+ALTER TABLE `recomendation`
+  MODIFY `id` int(2) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user`
