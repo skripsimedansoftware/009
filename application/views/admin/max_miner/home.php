@@ -10,7 +10,7 @@
 			<form action="">
 				<div class="form-group">
 					<label>Nilai Support</label>
-					<?php $min_support = (!empty($this->input->get('min-support')))?$this->input->get('min-support'):0.3 ?>
+					<?php $min_support = (!empty($this->input->get('min-support')))?$this->input->get('min-support'):0.2 ?>
 					<input type="text" class="form-control" name="min-support" value="<?= $min_support ?>" placeholder="Nilai Support">
 				</div>
 				<div class="form-group">
@@ -260,6 +260,8 @@
 									$joined_items[0] => $count_joined_items[$joined_item]/$single_item_count[$joined_items[0]],
 									$joined_items[1] => $count_joined_items[$joined_item]/$single_item_count[$joined_items[1]]
 								);
+
+								$recomendation->recomendation_add($joined_items[0], $joined_items[1]);
 
 								?>
 								<tr>

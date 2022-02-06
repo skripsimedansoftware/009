@@ -60,6 +60,48 @@ img.product-image {
 			<a class="btn btn-success" href="<?= base_url($this->router->fetch_class().'/order_next') ?>"><i class="fa fa-arrow-right"></i> Buat Pesanan</a>
 		</div>
 	</div>
+	<?php  if (!empty($recomendation)) : ?>
+	<div class="box">
+		<div class="box-header with-border">
+			<h3 class="box-title">Rekomendasi Produk</h3>
+		</div>
+		<div class="box-body">
+			<table class="table table-hover">
+				<thead>
+					<th>No</th>
+					<th>Nama Produk</th>
+					<th>Harga Produk</th>
+					<th>Foto</th>
+					<th>Opsi</th>
+				</thead>
+				<tbody>
+				<?php
+				$i = 1;
+				foreach ($recomendation as $key => $product): ?>
+					<form action="<?= base_url($this->router->fetch_class().'/cart_add') ?>" method="post">
+					<input type="hidden" name="id" value="<?= $product['id'] ?>">
+					<input type="hidden" name="name" value="<?= $product['name'] ?>">
+					<input type="hidden" name="price" value="<?= $product['price'] ?>">
+					<tr>
+						<td><?= $i ?></td>
+						<td><?= $product['name'] ?></td>
+						<td>Rp.<?= number_format($product['price'], 0, ',', '.') ?></td>
+						<td><img src="<?= (!empty($product['image']))?$product['image']:base_url('assets/image/no-image.png') ?>" class="img-responsive product-image"></td>
+						<td>
+							<input class="form-control input-sm" type="text" name="quantity" placeholder="Jumlah" value="1">
+							<br>
+							<button type="submit" class="btn btn-success"><i class="fa fa-cart-plus"></i> Masukkan Keranjang</button>
+						</td>
+					</tr>
+					</form>
+				<?php
+				$i++;
+				endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<?php endif; ?>
 	<div class="box">
 		<div class="box-header with-border">
 			<h3 class="box-title">Pilih Produk</h3>
