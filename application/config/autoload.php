@@ -133,4 +133,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('user', 'email_confirm', 'product', 'order', 'cart_model');
+$autoload['model'] = array('user', 'email_confirm', 'product', 'order', 'cart_model', 'recomendation');

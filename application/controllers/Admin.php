@@ -318,7 +318,17 @@ class Admin extends CI_Controller {
 	 */
 	public function order_add()
 	{
+		$recomendation = array_map(function($product) {
+			$recomendation = $this->recomendation->read(array('product' => $product['id']));
+			if ($recomendation->num_rows() >= 1)
+			{
+				return $this->product->read(array('id' => $recomendation->row()->product_recomendation))->row_array();
+			}
+
+			return FALSE;
+		}, $this->cart->contents());
 		$data['products'] = $this->product->read();
+		$data['recomendation'] = array_filter($recomendation);
 		$this->template->load('order/add', $data);
 	}
 
@@ -446,6 +456,7 @@ class Admin extends CI_Controller {
 	 */
 	public function max_miner()
 	{
+		$this->db->truncate('recomendation');
 		$orders = $this->order->read()->result_array();
 		$transactions = array();
 
@@ -457,10 +468,26 @@ class Admin extends CI_Controller {
 		}
 
 		$this->load->library('max_miner');
-		$this->max_miner->set_min_support((!empty($this->input->get('min-support')))?$this->input->get('min-support'):0.3);
+		$this->max_miner->set_min_support((!empty($this->input->get('min-support')))?$this->input->get('min-support'):0.2);
 		$this->max_miner->set_transactions($transactions);
 		$data['max_miner'] = $this->max_miner;
+		$data['recomendation'] = $this;
 		$this->template->load('max_miner/home', $data);
+	}
+
+	public function recomendation_add($product, $recomendation)
+	{
+		$product = $this->product->read(array('name' => $product));
+		$recomendation = $this->product->read(array('name' => $recomendation));
+
+		if ($product->num_rows() >= 1 && $recomendation->num_rows() >= 1)
+		{
+			$this->recomendation->create(array(
+				'product' => $product->row()->id,
+				'product_recomendation' => $recomendation->row()->id
+			));
+
+		}
 	}
 
 	public function is_owned_data($val, $str)
