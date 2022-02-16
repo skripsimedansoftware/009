@@ -45,8 +45,6 @@
 			reader.readAsDataURL(input.files[0]);
 		}
 	}
-
-	$('.datatable').DataTable();
 	</script>
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -206,7 +204,7 @@ desired effect
 	<footer class="main-footer">
 		<!-- To the right -->
 		<div class="pull-right hidden-xs">
-			SKRIPSI
+			Siti Alus Ningsih
 		</div>
 		<!-- Default to the left -->
 		<strong>Copyright &copy; <?= date('Y') ?> <a href="#"><?= $this->config->item('app_name'); ?></a>.</strong> All rights reserved.

@@ -46,7 +46,7 @@
 					<h3 class="box-title">Transaksi Produk</h3>
 				</div>
 				<div class="box-body">
-					<table class="table table-hover table-striped table-condensed">
+					<table class="table table-hover table-striped table-condensed datatable">
 						<thead>
 							<th>No</th>
 							<th>Nama Produk</th>
@@ -77,7 +77,7 @@
 					<h3 class="box-title">Support Produk</h3>
 				</div>
 				<div class="box-body">
-					<table class="table table-hover table-striped table-condensed">
+					<table class="table table-hover table-striped table-condensed datatable">
 						<thead>
 							<th>No</th>
 							<th>Nama Produk</th>
@@ -108,7 +108,7 @@
 					<h3 class="box-title">Eliminasi Produk</h3>
 				</div>
 				<div class="box-body">
-					<table class="table table-hover table-striped table-condensed">
+					<table class="table table-hover table-striped table-condensed datatable">
 						<thead>
 							<th>No</th>
 							<th>Nama Produk</th>
@@ -141,7 +141,7 @@
 					<h3 class="box-title">Transaksi Produk</h3>
 				</div>
 				<div class="box-body">
-					<table class="table table-hover table-striped table-condensed">
+					<table class="table table-hover table-striped table-condensed datatable">
 						<thead>
 							<th>No</th>
 							<th>Nama Produk</th>
@@ -172,7 +172,7 @@
 					<h3 class="box-title">Support Produk</h3>
 				</div>
 				<div class="box-body">
-					<table class="table table-hover table-striped table-condensed">
+					<table class="table table-hover table-striped table-condensed datatable">
 						<thead>
 							<th>No</th>
 							<th>Nama Produk</th>
@@ -203,7 +203,7 @@
 					<h3 class="box-title">Eliminasi Produk</h3>
 				</div>
 				<div class="box-body">
-					<table class="table table-hover table-striped table-condensed">
+					<table class="table table-hover table-striped table-condensed datatable">
 						<thead>
 							<th>No</th>
 							<th>Nama Produk</th>
@@ -236,7 +236,7 @@
 					<h3 class="box-title">Asosiasi</h3>
 				</div>
 				<div class="box-body">
-					<table class="table table-hover table-striped">
+					<table class="table table-hover table-striped datatable">
 						<thead>
 							<th>No</th>
 							<th>Rule</th>
@@ -313,3 +313,7 @@
 		</div>
 	</div>
 </section>
+
+<script type="text/javascript">
+$('.datatable').DataTable({ responsive: true });
+</script>
