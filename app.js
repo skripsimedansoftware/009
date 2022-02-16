@@ -78,7 +78,7 @@ const Initialize_Database = () => {
 			}
 		}
 
-		connection.sync({ [process.env.DB_MODE]: process.env.DB_SYNC }).then((conn) => {
+		connection.sync({ [process.env.DB_MODE]: false }).then((conn) => {
 			global.Models = Object.assign(connection.models, global.Models);
 			resolve({ connection, Sequelize, Op, Model, DataTypes });
 		});
@@ -143,58 +143,69 @@ Initialize_Database().then(async init => {
 	// 		name: 'Chiki',
 	// 		type: 'food',
 	// 		image: null,
-	// 		price: 18700
+	// 		price: 19500
 	// 	},
 	// 	{
 	// 		name: 'Maxicorn',
 	// 		type: 'food',
 	// 		image: null,
-	// 		price: 18700
+	// 		price: 28000
 	// 	},
 	// 	{
 	// 		name: 'Indomilk',
 	// 		type: 'drink',
 	// 		image: null,
-	// 		price: 18700
+	// 		price: 16700
 	// 	},
 	// 	{
 	// 		name: 'Ichi Ocha',
 	// 		type: 'drink',
 	// 		image: null,
-	// 		price: 18700
+	// 		price: 15000
 	// 	},
 	// 	{
 	// 		name: 'Club',
 	// 		type: 'drink',
 	// 		image: null,
-	// 		price: 18700
+	// 		price: 8000
 	// 	},
 	// 	{
 	// 		name: 'Fruitamin',
 	// 		type: 'drink',
 	// 		image: null,
-	// 		price: 18700
+	// 		price: 12600
 	// 	}
 	// ]);
 
 	var food = await Models.product.findAll({ where: { type: 'food' } });
 	var drink = await Models.product.findAll({ where: { type: 'drink' } });
-	var date = moment().year(2021).month(0).date(0).hours(0).minutes(0).seconds(0).milliseconds(0);
+	var date = moment().year(2021).month(0).date(1).hours(0).minutes(0).seconds(0).milliseconds(0);
 	for (i = 0; i < 1000; i++) {
 		date.add(random_array([random_integer(2, 4), random_integer(4, 6), random_integer(2, 8)]), 'hour');
-		var food_total = random_array([random_integer(1, 4), random_integer(0, 2), random_integer(1, 3)]);
-		var drink_total = random_array([random_integer(1, 4), random_integer(0, 2), random_integer(1, 3)]);
 
 		var total_price 	= [];
 		var total_items 	= [];
 			total_price[i] 	= 0;
 			total_items[i] 	= random_integer(2, 6);
 
-		var foods = new Array();
-		var drinks = new Array();
 
 		var order = new Array();
 		var product = new Array();
+
+		var product_1 = await Models.product.findOne({ where: { id: 1 } });
+		var product_7 = await Models.product.findOne({ where: { id: 7 } });
+
+		var cart_count_1 = await Models.cart.count({
+			where: {
+				product_id: 1
+			}
+		});
+
+		var cart_count_7 = await Models.cart.count({
+			where: {
+				product_id: 7
+			}
+		});
 
 		order[i] = await Models.order.create({
 			uid: random_string(10),
@@ -206,17 +217,44 @@ Initialize_Database().then(async init => {
 
 		product[i] = new Array();
 
-		var mix_product = (i) => {
-			var products = new Array();
-			for (mixer = 0; mixer+=1;) {
-				if (product[i].length == total_items[i]) {
-					return products;
-				} else {
-					var item = random_array(['drink', 'food']);
-					var random_product = random_array(eval(item));
-					if (product[i].indexOf(random_product.get('id')) == -1) {
-						product[i].push(random_product.get('id'));
-						products.push(random_product);
+		var yes_no = random_array(['yes', 'no']);
+		if (yes_no == 'yes') {
+			var mix_product = (i) => {
+				var products = new Array();
+				for (mixer = 0; mixer+=1;) {
+					if (product[i].length == total_items[i]) {
+						return products;
+					} else {
+						if (product[i].indexOf(1) == -1) {
+							product[i].push(1);
+							products.push(product_1);
+						} else if (product[i].indexOf(7) == -1) {
+							product[i].push(7);
+							products.push(product_7);
+						} else {
+							var item = random_array(['drink', 'food']);
+							var random_product = random_array(eval(item));
+							if (product[i].indexOf(random_product.get('id')) == -1) {
+								product[i].push(random_product.get('id'));
+								products.push(random_product);
+							}
+						}
+					}
+				}
+			}
+		} else {
+			var mix_product = (i) => {
+				var products = new Array();
+				for (mixer = 0; mixer+=1;) {
+					if (product[i].length == total_items[i]) {
+						return products;
+					} else {
+						var item = random_array(['drink', 'food']);
+						var random_product = random_array(eval(item));
+						if (product[i].indexOf(random_product.get('id')) == -1) {
+							product[i].push(random_product.get('id'));
+							products.push(random_product);
+						}
 					}
 				}
 			}
