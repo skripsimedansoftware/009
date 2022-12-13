@@ -1,5 +1,4 @@
-# Medan Software - Apriori
-
+# Medan Software - Max Miner
 
 ## Perhitungan
 
