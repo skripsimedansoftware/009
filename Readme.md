@@ -18,4 +18,43 @@
 
 ## Database Relationship
 
-![db-design](https://user-images.githubusercontent.com/11814324/155153542-25011ee2-122d-4e41-95c5-3dd07e1d6f31.png)
+![ERD](https://github.com/user-attachments/assets/44b8e043-ec17-4bb2-9c67-c1e227fada50)
+
+```txt
+user {
+	id integer(2) pk increments
+	role integer
+	email string(40)
+	username string(50)
+	password string(40)
+	full_name string(40)
+	photo string(100)
+}
+
+order {
+	id integer(4) pk increments
+	uid varchar(10)
+	item integer(1)
+	total decimal
+	date date
+	time time
+}
+
+product {
+	id integer(2) pk increments
+	type integer
+	name string(80)
+	image string(255)
+	price decimal
+}
+
+cart {
+	id integer(4) pk increments
+	order_id integer(4) > order.id
+	product_id integer(4) > product.id
+	name varchar(80)
+	quantity integer(2)
+	price decimal
+	subtotal decimal
+}
+```
